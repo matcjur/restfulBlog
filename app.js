@@ -10,7 +10,7 @@ var express=require('express'),
     mongoose=require('mongoose');
     
 
-mongoose.connect('mongodb+srv://matheus:1234@rest-blog-wobnh.mongodb.net/test?retryWrites=true', { useNewUrlParser: true });
+mongoose.connect(process.env.DATABASE, { useNewUrlParser: true });
 app.set("view engine", 'ejs');
 app.use(express.static('public'));
 app.use(methodOverride('_method'));
@@ -22,12 +22,17 @@ app.use(expressSanitizer());
 // passport configuration
 
 
+const session = require('express-session');
+const MongoStore = require('connect-mongo')(session);
 
-app.use(require('express-session')({
+app.use(session({
     secret: 'this is my REST blog',
     resave: false,
-    saveUninitialized: false
-}))
+    saveUninitialized: false,
+    store: new MongoStore( { mongooseConnection: mongoose.connection } )
+}));
+
+
 
 app.use(passport.initialize());
 app.use(passport.session());
