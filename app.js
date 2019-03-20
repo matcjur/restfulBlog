@@ -29,8 +29,12 @@ app.use(session({
     secret: 'this is my REST blog',
     resave: false,
     saveUninitialized: false,
-    store: new MongoStore( { mongooseConnection: mongoose.connection } )
+    
 }));
+
+app.use(session({
+    store: new MongoStore( { mongooseConnection: process.env.DATABASE } )
+}))
 
 
 
