@@ -5,11 +5,16 @@ var express=require('express'),
     expressSanitizer = require('express-sanitizer'),
     passport=require('passport'),
     LocalStrategy=require('passport-local'),
+    blogRoutes    = require("./routes"),
     User=require('./models/user'),
-    
+    dotenv = require('dotenv'),
     mongoose=require('mongoose');
     
+    
+    dotenv.config();
 
+
+    
 mongoose.connect(process.env.DATABASE, { useNewUrlParser: true });
 app.set("view engine", 'ejs');
 app.use(express.static('public'));
@@ -22,19 +27,15 @@ app.use(expressSanitizer());
 // passport configuration
 
 
-const session = require('express-session');
-const MongoStore = require('connect-mongo')(session);
 
-app.use(session({
-    secret: 'this is my REST blog',
-    resave: false,
-    saveUninitialized: false,
-    
-}));
+app.use(require('express-session')(
+    {
+        secret: 'this is the rest blog',
+        resave: false,
+        saveUninitialized: false
+    }
+))
 
-app.use(session({
-    store: new MongoStore( { mongooseConnection: process.env.DATABASE } )
-}))
 
 
 
@@ -45,11 +46,14 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 
-blogRoutes    = require("./routes")
+
+// adds req.user to all routes
 app.use(function(req, res, next){
     res.locals.currentUser = req.user;
     next();
  });
+
+ // uses router
 app.use("/", blogRoutes);
 
 

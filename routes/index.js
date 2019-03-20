@@ -2,9 +2,8 @@ var express=require('express'),
     router=express(),
     User=require('../models/user'),
     passport=require('passport'),
-    passportLocalMongoose=require('passport-local-mongoose'),
-    middleware= require('../middleware');
-    Blog=require('../models/blogPost')
+    middleware= require('../middleware'),
+    Blog=require('../models/blogPost');
 
     
 //  RESTful routes
