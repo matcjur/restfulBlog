@@ -60,7 +60,7 @@ router.get('/blogs/:id', function(req, res){
 })
 
 //EDIT route(edits a post)
-router.get('/blogs/:id/edit', function(req, res){
+router.get('/blogs/:id/edit', middleware.checkBlogOwnership, function(req, res){
     Blog.findById(req.params.id, function(err, foundBlog){
         if(err){
             res.redirect('/blogs');
@@ -72,7 +72,7 @@ router.get('/blogs/:id/edit', function(req, res){
 
 //UPDATE route(updates a post)
 
-router.put('/blogs/:id', function(req, res){
+router.put('/blogs/:id', middleware.checkBlogOwnership, function(req, res){
     req.body.blog.body=req.sanitize(req.body.blog.body);
     Blog.findByIdAndUpdate(req.params.id, req.body.blog, function(err, updatedBlog){
         if(err){
@@ -85,7 +85,7 @@ router.put('/blogs/:id', function(req, res){
 
 //DELETE route(deletes a post)
 
-router.delete('/blogs/:id', function(req, res){
+router.delete('/blogs/:id', middleware.checkBlogOwnership, function(req, res){
     //destroy blog
     Blog.findByIdAndDelete(req.params.id, function(err){
         if(err){
