@@ -9,15 +9,16 @@ middlewareObj.isLoggedIn= function(req, res, next){
     res.redirect('/login');
 }
 
-middlewareObj.checkBlogOwnership= function (req, res, next){
+middlewareObj.checkOwnership= function (req, res, next){
+    // check login status
     if(req.isAuthenticated()){
         Blog.findById(req.params.id, function(err, foundBlog){
             if(err){
                 console.log('error', 'blog not found');
                 res.redirect('back');
             }else{
-                //does the user own the blog?
-                if(foundBlog.author.id.equals(req.user._id)){
+                //check blog ownership
+                if(foundBlog.author.id.equals(req.user._id)||req.user.isAdmin){
                     next();
                     
                 }else{
