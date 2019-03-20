@@ -1,6 +1,6 @@
 mongoose=require('mongoose');
 
-
+//  mongoose/model config
 var blogSchema=new mongoose.Schema({
     title: String,
     image: String,
