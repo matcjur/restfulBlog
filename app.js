@@ -7,6 +7,7 @@ var express=require('express'),
     LocalStrategy=require('passport-local'),
     passportLocalMongoose=require('passport-local-mongoose'),
     User=require('./models/user'),
+    Blog=require('./models/blogPost'),
     mongoose=require('mongoose');
     
 
@@ -20,7 +21,6 @@ app.use(expressSanitizer());
 
 
 // passport configuration
-
 
 app.use(require('express-session')({
     secret: 'this is my REST blog',

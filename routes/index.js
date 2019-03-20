@@ -10,13 +10,14 @@ var express=require('express'),
     
 //  RESTful routes
 
+
+
 //INDEX route(home webpage)
 router.get('/blogs', function(req, res){
     Blog.find({}, function(err, blogs){
         if(err){
             console.log('error');
         }else{
-            console.log(req.user);
             res.render('index', {blogs:blogs});
         }
     })
@@ -39,6 +40,10 @@ router.post('/blogs', function(req, res){
         if(err){
             res.render('new');
         }else{
+            // assigns authorship
+            newBlog.author.id=req.user._id;
+            newBlog.author.username=req.user.username;
+            newBlog.save()
             //redirect to index
             res.redirect('/blogs');
         }

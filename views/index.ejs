@@ -17,6 +17,7 @@
                         <a class='header' href='/blogs/<%= blog._id%>'><%= blog.title %> </a>
                         <div class='meta'>
                             <span><%= blog.created.toDateString() %> </span>
+                            <span>by <%=blog.author.username %> </span>
                         </div>
                         <div class='description'>
                             <p><%- blog.body.substring(0, 100) %> </p>

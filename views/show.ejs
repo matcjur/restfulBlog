@@ -10,16 +10,19 @@
             </div>
             <div class='content'>
                 <span><%= blog.created.toDateString() %> </span>
+                <span> by <b> <%= blog.author.username%></b> </span>
             </div>
             <div class='description'>
                 <p><%= blog.body %> </p>      
             </div>
+            <% if(currentUser && blog.author.id.equals(currentUser._id)){ %> 
             <form method='POST' action='/blogs/<%=blog._id%>?_method=Delete'>
                 <button class='ui red basic button'>Delete</button>
             </form>
             <form method='GET' action='/blogs/<%=blog._id%>/edit'>
                 <button class='ui yellow basic button'>Edit</button>
             </form>
+            <% } %> 
         </div>
 </div>
 
