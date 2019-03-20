@@ -2,7 +2,6 @@ var express=require('express'),
     router=express(),
     User=require('../models/user'),
     passport=require('passport'),
-    localStrategy=require('passport-local'),
     passportLocalMongoose=require('passport-local-mongoose'),
     middleware= require('../middleware');
     Blog=require('../models/blogPost')

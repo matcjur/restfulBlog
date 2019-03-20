@@ -5,13 +5,12 @@ var express=require('express'),
     expressSanitizer = require('express-sanitizer'),
     passport=require('passport'),
     LocalStrategy=require('passport-local'),
-    passportLocalMongoose=require('passport-local-mongoose'),
     User=require('./models/user'),
-    Blog=require('./models/blogPost'),
+    
     mongoose=require('mongoose');
     
 
-mongoose.connect(process.env.DATABASE, { useNewUrlParser: true });
+mongoose.connect('mongodb+srv://matheus:1234@rest-blog-wobnh.mongodb.net/test?retryWrites=true', { useNewUrlParser: true });
 app.set("view engine", 'ejs');
 app.use(express.static('public'));
 app.use(methodOverride('_method'));
@@ -21,6 +20,8 @@ app.use(expressSanitizer());
 
 
 // passport configuration
+
+
 
 app.use(require('express-session')({
     secret: 'this is my REST blog',
