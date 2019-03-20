@@ -3,6 +3,10 @@ var express=require('express'),
     bodyParser=require('body-parser'),
     methodOverride=require('method-override'),
     expressSanitizer = require('express-sanitizer'),
+    passport=require('passport'),
+    LocalStrategy=require('passport-local'),
+    passportLocalMongoose=require('passport-local-mongoose'),
+    User=require('./models/user'),
     mongoose=require('mongoose');
     
 
@@ -13,15 +17,33 @@ app.use(methodOverride('_method'));
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(expressSanitizer());
 
-var blogRoutes    = require("./routes/blogs")
+
+
+// passport configuration
+
+
+app.use(require('express-session')({
+    secret: 'this is my REST blog',
+    resave: false,
+    saveUninitialized: false
+}))
+
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+
+blogRoutes    = require("./routes")
+app.use(function(req, res, next){
+    res.locals.currentUser = req.user;
+    next();
+ });
 app.use("/", blogRoutes);
 
 
 
-
-
-
-
-app.listen(3000, process.env.IP, function(){
+app.listen(process.env.PORT, process.env.IP, function(){
     console.log('server is running');
 });

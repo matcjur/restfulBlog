@@ -1,7 +1,13 @@
 var express=require('express'),
     router=express(),
+    User=require('../models/user'),
+    passport=require('passport'),
+    localStrategy=require('passport-local'),
+    passportLocalMongoose=require('passport-local-mongoose'),
+    middleware= require('../middleware');
     Blog=require('../models/blogPost')
 
+    
 //  RESTful routes
 
 //INDEX route(home webpage)
@@ -10,6 +16,7 @@ router.get('/blogs', function(req, res){
         if(err){
             console.log('error');
         }else{
+            console.log(req.user);
             res.render('index', {blogs:blogs});
         }
     })
@@ -20,7 +27,7 @@ router.get('/', function(req, res){
 });
 
 //NEW route(form page to input information)
-router.get('/blogs/new', function(req, res){
+router.get('/blogs/new', middleware.isLoggedIn, function(req, res){
     res.render("new");
 })
 
@@ -84,6 +91,46 @@ router.delete('/blogs/:id', function(req, res){
             res.redirect('/blogs');
         }
     })
+})
+////////////////////////
+// auth routes
+///////////////////////
+router.get('/register', function(req, res){
+    res.render('register')
+})
+
+// signup logic
+
+router.post('/register', function(req, res){
+    var newUser= new User({username: req.body.username});
+    User.register(newUser, req.body.password, function(err, user){
+        if(err){
+            console.log(err);
+            return res.render('register');
+        }
+        passport.authenticate('local')(req, res, function(){
+            console.log('you have signed up');
+            res.redirect('/')
+        })
+    })
+})
+
+// login routes
+router.get('/login', function(req, res){
+    res.render('login')
+})
+
+router.post('/login', passport.authenticate('local', {
+    successRedirect: '/',
+    failureRedirect: 'login'
+}) ,function(req, res){
+});
+
+// logout route
+
+router.get('/logout', function(req, res){
+    req.logOut();
+    res.redirect('/')
 })
 
 module.exports=router;
